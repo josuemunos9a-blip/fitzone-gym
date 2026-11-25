@@ -18,7 +18,7 @@
         <span class="insignia-estado">[ EFECTIVO EN SUCURSAL • FOLIOS DIGITALES ]</span>
 
         <!-- Botón de menú en pantallas chicas -->
-        <button class="btn-hamburguesa" id="btn-menu" aria-label="Abrir menú">
+        <button class="btn-hamburguesa" id="btn-menu" type="button" aria-label="Abrir menú">
             <span></span>
             <span></span>
             <span></span>
@@ -26,6 +26,7 @@
 
         <ul class="menu-pildoras" id="menu-principal">
             <li><a href="index.html">Inicio</a></li>
+            <li><a href="usuario.html">Mi Cuenta</a></li>
             <li><a href="productos.html">Productos y Membresías</a></li>
             <li><a href="registro.html" class="activo">Generar Ticket</a></li>
             <li><a href="resultados.html">Antes y Después</a></li>
@@ -34,7 +35,11 @@
 
     <!-- Contenido principal -->
     <main class="contenedor-principal">
-        <div class="form-caja">
+        <div class="form-caja marco-linea-negra">
+            <span class="borde-top" aria-hidden="true"></span>
+            <span class="borde-right" aria-hidden="true"></span>
+            <span class="borde-bottom" aria-hidden="true"></span>
+            <span class="borde-left" aria-hidden="true"></span>
 
             <!-- Consejo rápido -->
             <article class="bloque-foto">
@@ -92,15 +97,24 @@
                     <label>Agregar productos o entrenador (opcional)</label>
                     <div class="lista-extras">
                         <label class="extra-opcion">
-                            <span><input type="checkbox" name="extra" value="proteina"> Proteína Whey 2 lb</span>
+                            <span>
+                                <input type="checkbox" name="extra" value="proteina">
+                                Proteína Whey 2 lb <small id="stock-proteina"></small>
+                            </span>
                             <strong>$850 MXN</strong>
                         </label>
                         <label class="extra-opcion">
-                            <span><input type="checkbox" name="extra" value="creatina"> Creatina Monohidratada</span>
+                            <span>
+                                <input type="checkbox" name="extra" value="creatina">
+                                Creatina Monohidratada <small id="stock-creatina"></small>
+                            </span>
                             <strong>$480 MXN</strong>
                         </label>
                         <label class="extra-opcion">
-                            <span><input type="checkbox" name="extra" value="entrenador"> Entrenador Personalizado</span>
+                            <span>
+                                <input type="checkbox" name="extra" value="entrenador">
+                                Entrenador Personalizado <small id="stock-entrenador"></small>
+                            </span>
                             <strong>$800 MXN</strong>
                         </label>
                     </div>

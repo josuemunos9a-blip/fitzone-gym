@@ -17,7 +17,7 @@
         <p>Salud, entrenamiento y estilo de vida fit en un solo lugar</p>
 
         <!-- Botón hamburguesa para celular -->
-        <button class="btn-hamburguesa" id="btn-menu" aria-label="Abrir menú">
+        <button class="btn-hamburguesa" id="btn-menu" type="button" aria-label="Abrir menú">
             <span></span>
             <span></span>
             <span></span>
@@ -25,6 +25,7 @@
 
         <ul class="menu-pildoras" id="menu-principal">
             <li><a href="index.html">Inicio</a></li>
+            <li><a href="usuario.html">Mi Cuenta</a></li>
             <li><a href="productos.html" class="activo">Productos y Membresías</a></li>
             <li><a href="registro.html">Obtener Folio</a></li>
             <li><a href="resultados.html">Antes y Después</a></li>
@@ -32,7 +33,12 @@
     </header>
 
     <!-- Catálogo de planes y extras -->
-    <main class="contenedor-principal">
+    <main class="contenedor-principal marco-linea-negra">
+        <span class="borde-top" aria-hidden="true"></span>
+        <span class="borde-right" aria-hidden="true"></span>
+        <span class="borde-bottom" aria-hidden="true"></span>
+        <span class="borde-left" aria-hidden="true"></span>
+
         <div class="aviso-descuento">
             <strong>Descuento estudiantil:</strong> Obtén 20% de descuento en cualquier membresía presentando tu credencial vigente en recepción. Pago exclusivo en efectivo.
         </div>
@@ -50,7 +56,7 @@
                 </div>
                 <div>
                     <div class="precio">$150 MXN</div>
-                    <a href="registro.html?plan=semanal" class="btn btn-chico">Apartar folio</a>
+                    <a href="registro.html?plan=semanal" data-ir-plan="semanal" class="btn btn-chico">Apartar folio</a>
                 </div>
             </div>
 
@@ -62,7 +68,7 @@
                 </div>
                 <div>
                     <div class="precio">$450 MXN</div>
-                    <a href="registro.html?plan=mensual" class="btn btn-chico">Apartar folio</a>
+                    <a href="registro.html?plan=mensual" data-ir-plan="mensual" class="btn btn-chico">Apartar folio</a>
                 </div>
             </div>
 
@@ -74,7 +80,7 @@
                 </div>
                 <div>
                     <div class="precio">$4,200 MXN</div>
-                    <a href="registro.html?plan=anual" class="btn btn-chico">Apartar folio</a>
+                    <a href="registro.html?plan=anual" data-ir-plan="anual" class="btn btn-chico">Apartar folio</a>
                 </div>
             </div>
         </div>
@@ -89,10 +95,11 @@
                     <span class="etiqueta">Suplemento</span>
                     <h3>Proteína Whey 2 lb</h3>
                     <p>25g de proteína por porción para recuperación muscular.</p>
+                    <p class="precio" data-stock="proteina"></p>
                 </div>
                 <div>
                     <div class="precio">$850 MXN</div>
-                    <a href="registro.html?extra=proteina" class="btn btn-negro btn-chico">Reservar con folio</a>
+                    <a href="registro.html?extra=proteina" data-ir-extra="proteina" class="btn btn-negro btn-chico">Reservar con folio</a>
                 </div>
             </div>
 
@@ -101,10 +108,11 @@
                     <span class="etiqueta">Suplemento</span>
                     <h3>Creatina Monohidratada</h3>
                     <p>Bote de 300g sin sabor para fuerza y rendimiento.</p>
+                    <p class="precio" data-stock="creatina"></p>
                 </div>
                 <div>
                     <div class="precio">$480 MXN</div>
-                    <a href="registro.html?extra=creatina" class="btn btn-negro btn-chico">Reservar con folio</a>
+                    <a href="registro.html?extra=creatina" data-ir-extra="creatina" class="btn btn-negro btn-chico">Reservar con folio</a>
                 </div>
             </div>
 
@@ -113,10 +121,11 @@
                     <span class="etiqueta">Servicio</span>
                     <h3>Entrenador Personalizado</h3>
                     <p>Rutina a medida y supervisión técnica durante 30 días.</p>
+                    <p class="precio" data-stock="entrenador"></p>
                 </div>
                 <div>
                     <div class="precio">$800 MXN / mes</div>
-                    <a href="registro.html?extra=entrenador" class="btn btn-negro btn-chico">Reservar con folio</a>
+                    <a href="registro.html?extra=entrenador" data-ir-extra="entrenador" class="btn btn-negro btn-chico">Reservar con folio</a>
                 </div>
             </div>
         </div>

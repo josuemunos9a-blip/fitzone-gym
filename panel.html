@@ -3,104 +3,368 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitZone Gym | Panel del Dueño</title>
+    <title>FitZone Gym | Panel de Control</title>
     <link rel="stylesheet" href="estilos.css">
-    <!-- Carga el archivo JavaScript como módulo (type="module") al final para que el DOM ya exista -->
-    <script type="module" src="app.js"></script>
 </head>
 <body>
 
     <header class="encabezado">
-        <h1>FitZone Gym — Administración</h1>
-        <p>Panel privado para el control de folios, pagos en efectivo y vencimientos</p>
+        <div class="encabezado-marca">
+            <div class="logo-fz" aria-hidden="true">FZ</div>
+            <div class="encabezado-info">
+                <h1>PANEL DE CONTROL — FITZONE GYM</h1>
+                <p class="subtitulo">Gestión de folios, pagos en efectivo, ganancias e inventario</p>
+                <div class="insignias-header">
+                    <span class="insignia-dato">[ CONTROL INTERNO • FIRESTORE ]</span>
+                    <span class="insignia-dato">[ SIN DEVOLUCIONES ]</span>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-hamburguesa" id="btn-menu" type="button" aria-label="Abrir menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav aria-label="Navegación principal">
+            <ul class="menu-pildoras" id="menu-principal">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="usuario.html">Mi Cuenta</a></li>
+                <li><a href="productos.html">Productos y Membresías</a></li>
+                <li><a href="registro.html">Generar Ticket</a></li>
+                <li><a href="resultados.html">Antes y Después</a></li>
+                <li><a href="panel.html" class="activo">Panel</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <main class="contenedor-principal">
+    <main class="contenedor-principal marco-linea-negra">
+        <span class="borde-top" aria-hidden="true"></span>
+        <span class="borde-right" aria-hidden="true"></span>
+        <span class="borde-bottom" aria-hidden="true"></span>
+        <span class="borde-left" aria-hidden="true"></span>
 
-        <!-- Login del dueño con Firebase Authentication -->
-        <div id="vista-login" class="form-caja">
-            <h2 class="titulo-bloque">Acceso Exclusivo del Dueño</h2>
-            <p class="texto-intro">Inicia sesión con tu cuenta de administrador registrada en Firebase.</p>
+        <h2 class="titulo-bloque">Ganancias y Movimientos</h2>
+        <p class="texto-intro">Las ganancias cobradas se registran en Firestore al marcar un folio como pagado en efectivo. Las devoluciones no están permitidas.</p>
 
-            <form id="form-login">
-                <div class="campo">
-                    <label for="usuario">Correo del administrador</label>
-                    <input type="email" id="usuario" placeholder="admin@fitzone.com" required>
-                </div>
-                <div class="campo">
-                    <label for="clave">Contraseña</label>
-                    <input type="password" id="clave" placeholder="••••••••" required>
-                </div>
-                <button type="submit" class="btn" style="width: 100%;">Ingresar al panel</button>
-            </form>
-        </div>
-
-        <!-- Vista interna vacía hasta que entren registros reales desde Firebase -->
-        <div id="vista-panel" class="oculto">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 18px;">
+        <div class="grid-productos" style="margin-bottom: 20px;">
+            <div class="card-item">
                 <div>
-                    <h2 class="titulo-bloque">Control de Folios y Membresías</h2>
-                    <p class="texto-intro" style="margin-bottom: 0;">Busca un folio para registrar pago en efectivo y fecha de vencimiento.</p>
-                </div>
-                <div style="display: flex; gap: 8px;">
-                    <a href="index.html" class="btn btn-chico">Ver sitio público</a>
-                    <button id="btn-cerrar-sesion" class="btn btn-negro btn-chico">Cerrar sesión</button>
+                    <span class="etiqueta">Ganancias cobradas</span>
+                    <h3>Pagado en efectivo</h3>
+                    <p class="precio" id="panel-ganancias-pagado">$0 MXN</p>
                 </div>
             </div>
 
-            <div class="barra-busqueda">
-                <input type="text" id="input-buscar" placeholder="Buscar por folio (ej. FZ-2026-001), nombre o usuario">
-                <button id="btn-buscar" class="btn">Buscar</button>
-            </div>
-
-            <div id="resultado-busqueda" class="resultado-cliente oculto">
+            <div class="card-item">
                 <div>
-                    <span class="etiqueta">Cliente encontrado</span>
-                    <h3 id="res-titulo" style="margin-bottom: 6px;"></h3>
-                    <p id="res-info" style="color: #475569; font-size: 0.88rem; margin-bottom: 12px;"></p>
-                    <button id="btn-scoop" class="btn btn-negro btn-chico">Entregar scoop gratis</button>
-                </div>
-
-                <div>
-                    <span class="etiqueta">Activar membresía (pago en efectivo)</span>
-                    <div class="campo" style="margin-top: 8px;">
-                        <select id="select-membresia">
-                            <option value="semanal">Pase por 7 días ($150 MXN)</option>
-                            <option value="mensual">Membresía Mensual ($450 MXN)</option>
-                            <option value="anual">Membresía Anual ($4,200 MXN)</option>
-                        </select>
-                    </div>
-                    <button id="btn-guardar-membresia" class="btn btn-chico">Guardar membresía</button>
+                    <span class="etiqueta">Por cobrar</span>
+                    <h3>Pendientes en caja</h3>
+                    <p class="precio" id="panel-ganancias-pendiente">$0 MXN</p>
                 </div>
             </div>
 
-            <h3 style="margin-bottom: 12px; color: #0b0f19;">Membresías activas y vencidas</h3>
-            <div class="tabla-contenedor">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Folio</th>
-                            <th>Nombre</th>
-                            <th>Plan y extras</th>
-                            <th>Efectivo</th>
-                            <th>Inicio</th>
-                            <th>Vence</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabla-vencimientos">
-                        <tr>
-                            <td colspan="7" class="fila-vacia">Cargando registros desde Firebase...</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="card-item">
+                <div>
+                    <span class="etiqueta">Cancelados</span>
+                    <h3>No suman ganancia</h3>
+                    <p class="precio agotado" id="panel-ganancias-cancelado">$0 MXN</p>
+                </div>
             </div>
         </div>
 
+        <h2 class="titulo-bloque">Control de Inventario (Stock)</h2>
+        <p class="texto-intro">Revisa las existencias actuales en Firestore o súmale unidades rápidas para pruebas/reposición.</p>
+
+        <div class="grid-productos" id="grid-panel-stock">
+            <div class="card-item">
+                <div>
+                    <span class="etiqueta">Suplemento</span>
+                    <h3>Proteína Whey 2 lb</h3>
+                    <p class="precio" id="panel-stock-proteina">Cargando...</p>
+                </div>
+                <button type="button" class="btn btn-chico" data-sumar-stock="proteina" data-cantidad="10">+10 unidades</button>
+            </div>
+
+            <div class="card-item">
+                <div>
+                    <span class="etiqueta">Suplemento</span>
+                    <h3>Creatina Monohidratada</h3>
+                    <p class="precio" id="panel-stock-creatina">Cargando...</p>
+                </div>
+                <button type="button" class="btn btn-chico" data-sumar-stock="creatina" data-cantidad="10">+10 unidades</button>
+            </div>
+
+            <div class="card-item">
+                <div>
+                    <span class="etiqueta">Servicio</span>
+                    <h3>Entrenador Personalizado</h3>
+                    <p class="precio" id="panel-stock-entrenador">Cargando...</p>
+                </div>
+                <button type="button" class="btn btn-chico" data-sumar-stock="entrenador" data-cantidad="10">+10 unidades</button>
+            </div>
+        </div>
+
+        <h2 class="titulo-bloque">Folios y Compras Registradas</h2>
+        <p class="texto-intro">Filtra por folio, cliente o usuario, marca pagos en efectivo o cancela folios pendientes.</p>
+
+        <div class="barra-busqueda">
+            <input type="text" id="buscar-folio" placeholder="Buscar por folio (FZ-2026-001), nombre o usuario...">
+            <button type="button" id="btn-refrescar-panel" class="btn">Actualizar</button>
+        </div>
+
+        <div class="tabla-contenedor">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Folio</th>
+                        <th>Cliente / Usuario</th>
+                        <th>Plan y Extras</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-panel-folios">
+                    <tr>
+                        <td colspan="6" class="fila-vacia">Cargando folios desde Firestore...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </main>
 
-    <footer>FitZone Gym — Uso interno exclusivo del propietario.</footer>
+    <footer>
+        <span>FitZone Gym — Panel de Control</span>
+        <span>No hay devoluciones • Pagos en efectivo en sucursal.</span>
+    </footer>
 
-    <script type="module" src="app.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import {
+            getFirestore,
+            collection,
+            addDoc,
+            getDocs,
+            doc,
+            getDoc,
+            setDoc,
+            updateDoc,
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCyTbxaNq_dMEU-D6sKWRjHxLjjuLTKY6M",
+            authDomain: "fitzone-gym-4197b.firebaseapp.com",
+            projectId: "fitzone-gym-4197b",
+            storageBucket: "fitzone-gym-4197b.firebasestorage.app",
+            messagingSenderId: "79650504547",
+            appId: "1:79650504547:web:f79af37631a48d0ea59d56",
+            measurementId: "G-1XHXMMSQKS",
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const foliosRef = collection(db, "folios");
+        const gananciasRef = collection(db, "ganancias");
+
+        const EXTRAS_INFO = {
+            proteina: { nombre: "Proteína Whey 2 lb", stockBase: 40 },
+            creatina: { nombre: "Creatina Monohidratada", stockBase: 45 },
+            entrenador: { nombre: "Entrenador Personalizado", stockBase: 38 },
+        };
+
+        let todosLosFolios = [];
+
+        const btnMenu = document.getElementById("btn-menu");
+        const menuPrincipal = document.getElementById("menu-principal");
+        btnMenu?.addEventListener("click", () => {
+            btnMenu.classList.toggle("activo");
+            menuPrincipal?.classList.toggle("abierto");
+        });
+
+        function parsearMontoMXN(textoTotal) {
+            const limpio = String(textoTotal || "0").replace(/[^\d.-]/g, "");
+            const numero = Number(limpio);
+            return Number.isFinite(numero) ? numero : 0;
+        }
+
+        function actualizarResumenGanancias(lista) {
+            let pagado = 0;
+            let pendiente = 0;
+            let cancelado = 0;
+
+            for (const f of lista) {
+                const monto = parsearMontoMXN(f.total);
+                const estado = String(f.estado || "").toLowerCase();
+
+                if (estado === "cancelado") {
+                    cancelado += monto;
+                } else if (estado.includes("pagado")) {
+                    pagado += monto;
+                } else {
+                    pendiente += monto;
+                }
+            }
+
+            const fmt = (n) => `$${n.toLocaleString("es-MX")} MXN`;
+            const elPagado = document.getElementById("panel-ganancias-pagado");
+            const elPendiente = document.getElementById("panel-ganancias-pendiente");
+            const elCancelado = document.getElementById("panel-ganancias-cancelado");
+
+            if (elPagado) elPagado.textContent = fmt(pagado);
+            if (elPendiente) elPendiente.textContent = fmt(pendiente);
+            if (elCancelado) elCancelado.textContent = fmt(cancelado);
+        }
+
+        async function cargarInventarioPanel() {
+            for (const [clave, info] of Object.entries(EXTRAS_INFO)) {
+                const ref = doc(db, "inventario", clave);
+                const snap = await getDoc(ref);
+                let stock = info.stockBase;
+
+                if (!snap.exists()) {
+                    await setDoc(ref, { nombre: info.nombre, stock, sumadoPrueba30: true });
+                } else {
+                    stock = Number(snap.data().stock ?? 0);
+                }
+
+                const el = document.getElementById(`panel-stock-${clave}`);
+                if (el) {
+                    el.textContent = `Stock actual: ${stock}`;
+                    el.classList.toggle("agotado", stock <= 0);
+                }
+            }
+        }
+
+        document.querySelectorAll("[data-sumar-stock]").forEach((btn) => {
+            btn.addEventListener("click", async () => {
+                const clave = btn.dataset.sumarStock;
+                const sumar = Number(btn.dataset.cantidad || 10);
+                const ref = doc(db, "inventario", clave);
+                const snap = await getDoc(ref);
+                const actual = snap.exists() ? Number(snap.data().stock ?? 0) : 0;
+
+                await updateDoc(ref, { stock: actual + sumar });
+                await cargarInventarioPanel();
+            });
+        });
+
+        function pintarFolios(lista) {
+            const tbody = document.getElementById("tabla-panel-folios");
+            if (!tbody) return;
+
+            if (!lista.length) {
+                tbody.innerHTML = `<tr><td colspan="6" class="fila-vacia">No hay folios que coincidan.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = lista.map((f) => {
+                const estado = f.estado || "Pendiente de pago en efectivo";
+                const esCancelado = estado === "Cancelado";
+                const esPagado = estado.toLowerCase().includes("pagado");
+                const claseEstado = esCancelado ? "estado vencida" : "estado vigente";
+
+                return `
+                    <tr>
+                        <td><strong>${f.folio || "-"}</strong></td>
+                        <td>${f.nombre || "-"}<br><small>@${f.usuario || "-"}</small></td>
+                        <td>${f.plan || "-"}${f.extras && f.extras !== "Ninguno" ? `<br><small>Extras: ${f.extras}</small>` : ""}</td>
+                        <td>${f.total || "$0 MXN"}</td>
+                        <td><span class="${claseEstado}">${estado}</span></td>
+                        <td>
+                            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                <button type="button" class="btn btn-chico" data-marcar-pagado="${f.id}" ${esCancelado || esPagado ? "disabled" : ""}>Pagado</button>
+                                <button type="button" class="btn btn-rojo btn-chico" data-cancelar-panel="${f.id}" ${esCancelado ? "disabled" : ""}>Cancelar</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+
+            tbody.querySelectorAll("[data-marcar-pagado]").forEach((btn) => {
+                btn.addEventListener("click", async () => {
+                    const id = btn.dataset.marcarPagado;
+                    const folioObj = todosLosFolios.find((x) => x.id === id);
+                    if (!folioObj) return;
+
+                    await updateDoc(doc(db, "folios", id), { estado: "Pagado en efectivo" });
+
+                    // Guarda registro de ganancia cobrada en la colección "ganancias"
+                    await addDoc(gananciasRef, {
+                        folio: folioObj.folio || "",
+                        cliente: folioObj.nombre || "",
+                        usuario: folioObj.usuario || "",
+                        monto: parsearMontoMXN(folioObj.total),
+                        totalTexto: folioObj.total || "$0 MXN",
+                        metodo: "Efectivo en sucursal",
+                        fechaPago: new Date().toISOString(),
+                    });
+
+                    await cargarFoliosPanel();
+                });
+            });
+
+            tbody.querySelectorAll("[data-cancelar-panel]").forEach((btn) => {
+                btn.addEventListener("click", async () => {
+                    const id = btn.dataset.cancelarPanel;
+                    const folioObj = todosLosFolios.find((x) => x.id === id);
+                    if (!folioObj) return;
+
+                    const ok = window.confirm(
+                        `Aviso: Las devoluciones NO están permitidas en FitZone Gym.\n\n` +
+                        `¿Cancelar el folio ${folioObj.folio}?`
+                    );
+                    if (!ok) return;
+
+                    await updateDoc(doc(db, "folios", id), { estado: "Cancelado" });
+
+                    if (Array.isArray(folioObj.extrasClaves)) {
+                        for (const claveExtra of folioObj.extrasClaves) {
+                            if (!EXTRAS_INFO[claveExtra]) continue;
+                            const invRef = doc(db, "inventario", claveExtra);
+                            const snap = await getDoc(invRef);
+                            const actual = snap.exists() ? Number(snap.data().stock ?? 0) : 0;
+                            await updateDoc(invRef, { stock: actual + 1 });
+                        }
+                        await cargarInventarioPanel();
+                    }
+
+                    await cargarFoliosPanel();
+                    window.alert("Folio cancelado. Recuerda que no hay devoluciones.");
+                });
+            });
+        }
+
+        async function cargarFoliosPanel() {
+            const snap = await getDocs(foliosRef);
+            todosLosFolios = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+            actualizarResumenGanancias(todosLosFolios);
+            aplicarFiltro();
+        }
+
+        function aplicarFiltro() {
+            const texto = (document.getElementById("buscar-folio")?.value || "").trim().toLowerCase();
+            if (!texto) {
+                pintarFolios(todosLosFolios);
+                return;
+            }
+            const filtrados = todosLosFolios.filter((f) =>
+                String(f.folio || "").toLowerCase().includes(texto) ||
+                String(f.nombre || "").toLowerCase().includes(texto) ||
+                String(f.usuario || "").toLowerCase().includes(texto)
+            );
+            pintarFolios(filtrados);
+        }
+
+        document.getElementById("buscar-folio")?.addEventListener("input", aplicarFiltro);
+        document.getElementById("btn-refrescar-panel")?.addEventListener("click", async () => {
+            await cargarInventarioPanel();
+            await cargarFoliosPanel();
+        });
+
+        cargarInventarioPanel();
+        cargarFoliosPanel();
+    </script>
 </body>
 </html>

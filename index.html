@@ -1,38 +1,50 @@
 <!DOCTYPE html>
-<!-- HTML5 -->
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <!-- Ajuste para celular y compu -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitZone Gym | Inicio</title>
-    <!-- Estilos del sitio -->
+    <title>FitZone Gym — Inicio</title>
     <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-
-    <!-- Encabezado y navegación -->
     <header class="encabezado">
-        <h1>Bienvenido a FitZone Gym</h1>
-        <p>Salud, entrenamiento y estilo de vida fit en un solo lugar</p>
+        <div class="encabezado-marca">
+            <div class="logo-fz" aria-hidden="true">FZ</div>
+            <div class="encabezado-info">
+                <h1>BIENVENIDO A FITZONE GYM</h1>
+                <p class="subtitulo">Salud, entrenamiento, pesas, cardio y estilo de vida fit en un solo lugar</p>
+                <div class="insignias-header">
+                    <span class="insignia-dato">[ EFECTIVO EN SUCURSAL • FOLIOS DIGITALES ]</span>
+                    <span class="insignia-dato">[ LUN–DOM 6:00–22:00 ]</span>
+                </div>
+            </div>
+        </div>
 
-        <!-- Botón hamburguesa para celular -->
-        <button class="btn-hamburguesa" id="btn-menu" aria-label="Abrir menú">
+        <button class="btn-hamburguesa" id="btn-menu" type="button" aria-label="Abrir menú">
             <span></span>
             <span></span>
             <span></span>
         </button>
 
-        <ul class="menu-pildoras" id="menu-principal">
-            <li><a href="index.html" class="activo">Inicio</a></li>
-            <li><a href="productos.html">Productos y Membresías</a></li>
-            <li><a href="registro.html">Obtener Folio</a></li>
-            <li><a href="resultados.html">Antes y Después</a></li>
-        </ul>
+        <nav aria-label="Navegación principal">
+            <ul class="menu-pildoras" id="menu-principal">
+                <li><a href="index.html" class="activo">Inicio</a></li>
+                <li><a href="usuario.html">Mi Cuenta</a></li>
+                <li><a href="productos.html">Productos y Membresías</a></li>
+                <li><a href="registro.html">Generar Ticket</a></li>
+                <li><a href="resultados.html">Antes y Después</a></li>
+                
+            </ul>
+        </nav>
     </header>
 
-    <!-- Secciones principales -->
-    <main class="contenedor-principal">
+    <!-- Contenedor principal centrado con contorno negro en movimiento -->
+    <main class="contenedor-principal marco-linea-negra">
+        <span class="borde-top" aria-hidden="true"></span>
+        <span class="borde-right" aria-hidden="true"></span>
+        <span class="borde-bottom" aria-hidden="true"></span>
+        <span class="borde-left" aria-hidden="true"></span>
+
         <h2 class="titulo-bloque">Promociones y Vida Fit</h2>
         <p class="texto-intro">
             Promoción de apertura — Regístrate en línea y llévate <strong>1 scoop de proteína gratis</strong> al liquidar en efectivo en recepción.
@@ -43,10 +55,12 @@
             <div class="marco-imagen">
                 <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80" alt="Área de entrenamiento con pesas">
             </div>
-            <h3 class="subtitulo-foto">Área de fuerza: contamos con pesas, barras y discos, mancuernas y kettlebells, y máquinas de fuerza</h3>
-            <p class="descripcion-bloque">
-                Entrenar de 3 a 4 días por semana fortalece tus músculos, mejora tu postura y mantiene tu energía estable durante toda la jornada.
-            </p>
+            <div>
+                <h3 class="subtitulo-foto">Área de fuerza: contamos con pesas, barras y discos, mancuernas y kettlebells, y máquinas de fuerza</h3>
+                <p class="descripcion-bloque">
+                    Entrenar de 3 a 4 días por semana fortalece tus músculos, mejora tu postura y mantiene tu energía estable durante toda la jornada.
+                </p>
+            </div>
         </article>
 
         <!-- Área de cardio -->
@@ -54,10 +68,12 @@
             <div class="marco-imagen">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/2/26/Gym_Cardio_Area.jpg?utm_source=es.wikipedia.org&utm_campaign=index&utm_content=original" alt="Área de cardio del gimnasio">
             </div>
-            <h3 class="subtitulo-foto">Área de cardio equipada para todos los niveles</h3>
-            <p class="descripcion-bloque">
-                Entrenar de 3 a 4 días por semana fortalece tus músculos, mejora tu postura y mantiene tu energía estable durante toda la jornada.
-            </p>
+            <div>
+                <h3 class="subtitulo-foto">Área de cardio equipada para todos los niveles</h3>
+                <p class="descripcion-bloque">
+                    Entrenar de 3 a 4 días por semana fortalece tus músculos, mejora tu postura y mantiene tu energía estable durante toda la jornada.
+                </p>
+            </div>
         </article>
 
         <!-- Nutrición deportiva -->
@@ -65,10 +81,12 @@
             <div class="marco-imagen">
                 <img src="https://images.unsplash.com/photo-1593095948071-474c5cc2989d?auto=format&fit=crop&w=900&q=80" alt="Suplemento de proteína">
             </div>
-            <h3 class="subtitulo-foto">Nutrición deportiva — 1 scoop de proteína gratis con tu folio web</h3>
-            <p class="descripcion-bloque">
-                Tomar proteína dentro de los primeros 45 minutos después de entrenar ayuda a reparar las fibras musculares. Genera tu folio hoy y reclámalo en caja.
-            </p>
+            <div>
+                <h3 class="subtitulo-foto">Nutrición deportiva — 1 scoop de proteína gratis con tu folio web</h3>
+                <p class="descripcion-bloque">
+                    Tomar proteína dentro de los primeros 45 minutos después de entrenar ayuda a reparar las fibras musculares. Genera tu folio hoy y reclámalo en caja.
+                </p>
+            </div>
         </article>
 
         <!-- Hábitos saludables -->
@@ -76,10 +94,12 @@
             <div class="marco-imagen">
                 <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=900&q=80" alt="Hábitos saludables y ejercicio">
             </div>
-            <h3 class="subtitulo-foto">Hábitos saludables: hidratación, descanso y constancia</h3>
-            <p class="descripcion-bloque">
-                Complementa tu rutina tomando suficiente agua y durmiendo al menos 7 horas diarias para notar cambios reales desde el primer mes.
-            </p>
+            <div>
+                <h3 class="subtitulo-foto">Hábitos saludables: hidratación, descanso y constancia</h3>
+                <p class="descripcion-bloque">
+                    Complementa tu rutina tomando suficiente agua y durmiendo al menos 7 horas diarias para notar cambios reales desde el primer mes.
+                </p>
+            </div>
         </article>
 
         <a href="registro.html" class="btn">Generar mi folio gratis</a>

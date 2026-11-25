@@ -2,7 +2,6 @@
 // CONEXIÓN A FIREBASE FIRESTORE
 // =====================================================================
 
-// Importamos Firebase desde el CDN oficial para no depender de npm
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
     getFirestore,
@@ -12,10 +11,12 @@ import {
     query,
     where,
     doc,
+    getDoc,
+    setDoc,
     updateDoc,
+    runTransaction,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Datos del proyecto fitzone-gym-4197b en Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyCyTbxaNq_dMEU-D6sKWRjHxLjjuLTKY6M",
     authDomain: "fitzone-gym-4197b.firebaseapp.com",
@@ -26,16 +27,14 @@ const firebaseConfig = {
     measurementId: "G-1XHXMMSQKS",
 };
 
-// Arrancamos la app de Firebase, conectamos Firestore y apuntamos a la colección "folios"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const foliosRef = collection(db, "folios");
 
 // =====================================================================
-// PRECIOS DE PLANES Y EXTRAS
+// PRECIOS DE PLANES, EXTRAS Y STOCK INICIAL (+30 PARA PRUEBAS)
 // =====================================================================
 
-// Planes y pases disponibles
 const PRECIOS_PLANES = {
     ninguno: { nombre: "Sin membresía (solo productos)", precio: 0 },
     semanal: { nombre: "Pase por 7 días", precio: 150 },
@@ -43,22 +42,19 @@ const PRECIOS_PLANES = {
     anual: { nombre: "Membresía Anual", precio: 4200 },
 };
 
-// Suplementos y entrenador
 const PRECIOS_EXTRAS = {
-    proteina: { nombre: "Proteína Whey 2 lb", precio: 850 },
-    creatina: { nombre: "Creatina Monohidratada", precio: 480 },
-    entrenador: { nombre: "Entrenador Personalizado", precio: 800 },
+    proteina: { nombre: "Proteína Whey 2 lb", precio: 850, stockInicial: 40 },
+    creatina: { nombre: "Creatina Monohidratada", precio: 480, stockInicial: 45 },
+    entrenador: { nombre: "Entrenador Personalizado", precio: 800, stockInicial: 38 },
 };
 
 // =====================================================================
 // ELEMENTOS DEL DOM Y ESTADO
 // =====================================================================
 
-// Menú y navegación
 const btnMenu = document.getElementById("btn-menu");
 const menuPrincipal = document.getElementById("menu-principal");
 
-// Formulario y controles de registro (registro.html)
 const formRegistro = document.getElementById("form-registro");
 const btnGenerar = document.getElementById("btn-generar");
 const selectPlan = document.getElementById("plan");
@@ -66,21 +62,19 @@ const checkEstudiante = document.getElementById("estudiante");
 const checkboxesExtras = document.querySelectorAll('input[name="extra"]');
 const comprobante = document.getElementById("comprobante");
 
-// Formulario y controles de consulta (consulta.html)
 const formConsultar = document.getElementById("form-consultar");
 const resultadoConsulta = document.getElementById("resultado-consulta");
 const btnImprimirConsulta = document.getElementById("btn-imprimir-consulta");
 const btnCancelarFolio = document.getElementById("btn-cancelar-folio");
 const btnCerrarConsulta = document.getElementById("btn-cerrar-consulta");
 
-// Guarda el ticket que se está viendo en consulta.html
 let folioConsultadoActual = null;
+let stockActual = {};
 
 // =====================================================================
 // CÓDIGO DE BARRAS
 // =====================================================================
 
-// Pinta un código de barras CODE128 en el <svg> que le pasemos
 function dibujarCodigoBarras(selectorId, valorCodigo) {
     const el = document.getElementById(selectorId);
     if (!el || typeof window.JsBarcode !== "function") return;
@@ -101,13 +95,11 @@ function dibujarCodigoBarras(selectorId, valorCodigo) {
 // MENÚ MÓVIL Y ESTILO DE BOTONES
 // =====================================================================
 
-// Abre o cierra el menú hamburguesa en celular
 btnMenu?.addEventListener("click", () => {
     btnMenu.classList.toggle("activo");
     menuPrincipal?.classList.toggle("abierto");
 });
 
-// Cierra el menú en móvil al tocar un enlace
 menuPrincipal?.querySelectorAll("a").forEach((enlace) => {
     enlace.addEventListener("click", () => {
         btnMenu?.classList.remove("activo");
@@ -115,23 +107,129 @@ menuPrincipal?.querySelectorAll("a").forEach((enlace) => {
     });
 });
 
-// Cambia el botón de generar ticket a verde al presionarlo
 btnGenerar?.addEventListener("pointerdown", () => {
     btnGenerar.classList.add("btn-verde");
 });
 
-// Efecto verde al presionar botones con clase .btn
-document.querySelectorAll(".btn").forEach((boton) => {
+document.querySelectorAll("button, .btn, .btn-primario").forEach((boton) => {
     boton.addEventListener("pointerdown", () => {
+        boton.classList.add("presionado");
         boton.classList.add("btn-verde");
     });
+
+    const quitarEstado = () => {
+        boton.classList.remove("presionado");
+    };
+
+    boton.addEventListener("pointerup", quitarEstado);
+    boton.addEventListener("pointercancel", quitarEstado);
+    boton.addEventListener("mouseleave", quitarEstado);
 });
 
 // =====================================================================
-// VALIDACIÓN DE CAMPOS
+// SELECCIÓN DIRECTA DESDE PRODUCTOS / PLANES A REGISTRO.HTML
 // =====================================================================
 
-// Busca o crea el <span> de mensaje debajo del campo
+document.querySelectorAll("[data-ir-plan], [data-ir-extra]").forEach((el) => {
+    el.addEventListener("click", (e) => {
+        if (el.tagName === "A") e.preventDefault();
+        const plan = el.dataset.irPlan || "";
+        const extra = el.dataset.irExtra || "";
+        localStorage.setItem("fitzone_seleccion", JSON.stringify({ plan, extra }));
+        window.location.href = "registro.html";
+    });
+});
+
+function aplicarSeleccionGuardada() {
+    const params = new URLSearchParams(window.location.search);
+    const planParam = params.get("plan");
+    const extraParam = params.get("extra");
+
+    let guardada = null;
+    try {
+        guardada = JSON.parse(localStorage.getItem("fitzone_seleccion") || "null");
+    } catch {
+        guardada = null;
+    }
+
+    const planElegido = planParam || guardada?.plan || "";
+    const extraElegido = extraParam || guardada?.extra || "";
+
+    if (planElegido && selectPlan && PRECIOS_PLANES[planElegido]) {
+        selectPlan.value = planElegido;
+    }
+
+    if (extraElegido && PRECIOS_EXTRAS[extraElegido]) {
+        checkboxesExtras.forEach((chk) => {
+            if (chk.value === extraElegido) {
+                chk.checked = true;
+            }
+        });
+    }
+
+    if (guardada) {
+        localStorage.removeItem("fitzone_seleccion");
+    }
+}
+
+// =====================================================================
+// INVENTARIO / STOCK EN FIRESTORE
+// =====================================================================
+
+async function cargarYMostrarStock() {
+    const mapa = {};
+
+    for (const [clave, info] of Object.entries(PRECIOS_EXTRAS)) {
+        const ref = doc(db, "inventario", clave);
+        const snap = await getDoc(ref);
+
+        if (!snap.exists()) {
+            await setDoc(ref, {
+                nombre: info.nombre,
+                stock: info.stockInicial,
+                sumadoPrueba30: true,
+            });
+            mapa[clave] = info.stockInicial;
+        } else {
+            const data = snap.data();
+            let cant = Number(data.stock ?? info.stockInicial);
+
+            if (!data.sumadoPrueba30) {
+                cant += 30;
+                await updateDoc(ref, {
+                    stock: cant,
+                    sumadoPrueba30: true,
+                });
+            }
+            mapa[clave] = cant;
+        }
+    }
+
+    stockActual = mapa;
+
+    document.querySelectorAll("[data-stock]").forEach((el) => {
+        const clave = el.dataset.stock;
+        const cant = stockActual[clave] ?? 0;
+        el.textContent = cant > 0 ? `Stock disponible: ${cant}` : "Agotado";
+        el.classList.toggle("agotado", cant <= 0);
+    });
+
+    checkboxesExtras.forEach((chk) => {
+        const cant = stockActual[chk.value];
+        if (typeof cant === "number") {
+            chk.disabled = cant <= 0;
+            const badge = document.getElementById(`stock-${chk.value}`);
+            if (badge) {
+                badge.textContent = cant > 0 ? ` (${cant} disp.)` : " (Agotado)";
+            }
+        }
+    });
+}
+
+// =====================================================================
+// VALIDACIÓN DE CAMPOS (VERDE SI BIEN, ROJO SI MAL)
+// =====================================================================
+
 function obtenerElementoMensaje(input) {
     const contenedorCampo = input.closest(".campo");
     if (!contenedorCampo) return null;
@@ -145,13 +243,12 @@ function obtenerElementoMensaje(input) {
     return msg;
 }
 
-// Colorea el label (azul si está bien, rojo si está mal) y muestra el mensaje
 function marcarCampo(input, esValido, mensajeTexto = "") {
     const label = document.querySelector(`label[for="${input.id}"]`);
     const msg = obtenerElementoMensaje(input);
 
     if (label) {
-        label.classList.remove("label-bien", "label-mal");
+        label.classList.remove("label-bien", "label-mal", "label-error");
         label.classList.add(esValido ? "label-bien" : "label-mal");
     }
 
@@ -164,7 +261,6 @@ function marcarCampo(input, esValido, mensajeTexto = "") {
     }
 }
 
-// Valida cada campo según su regla
 function validarCampo(input) {
     const valor = input.value.trim();
 
@@ -226,7 +322,6 @@ function validarCampo(input) {
     return true;
 }
 
-// Validación en vivo al escribir o salir de cada input de registro
 const camposRegistro = ["nombre", "telefono", "reg-usuario", "reg-clave"]
     .map((id) => document.getElementById(id))
     .filter(Boolean);
@@ -236,7 +331,6 @@ camposRegistro.forEach((input) => {
     input.addEventListener("blur", () => validarCampo(input));
 });
 
-// Validación en vivo para los inputs de consulta
 const camposConsulta = ["consulta-usuario", "consulta-clave"]
     .map((id) => document.getElementById(id))
     .filter(Boolean);
@@ -250,12 +344,10 @@ camposConsulta.forEach((input) => {
 // CÁLCULO DE TOTALES
 // =====================================================================
 
-// Formatea números en pesos mexicanos
 function formatoMXN(cantidad) {
     return `$${cantidad.toLocaleString("es-MX")} MXN`;
 }
 
-// Suma plan + extras y aplica 20% de descuento al plan si es estudiante
 function calcularTotales() {
     const planSeleccionado = PRECIOS_PLANES[selectPlan?.value] || PRECIOS_PLANES.ninguno;
     let totalExtras = 0;
@@ -281,18 +373,54 @@ function calcularTotales() {
     return { planSeleccionado, totalExtras, subtotal, descuento, total };
 }
 
-// Recalcula cada vez que cambia el plan, extras o descuento estudiantil
 [selectPlan, checkEstudiante, ...checkboxesExtras].forEach((el) => {
     el?.addEventListener("change", calcularTotales);
 });
 
+aplicarSeleccionGuardada();
 calcularTotales();
+cargarYMostrarStock();
 
 // =====================================================================
-// GUARDAR, CONSULTAR Y CANCELAR TICKETS EN FIRESTORE
+// GUARDAR, CONSULTAR, VER HISTORIAL Y CANCELAR TICKETS EN FIRESTORE
 // =====================================================================
 
-// Arma el siguiente folio tipo FZ-2026-001 según cuántos documentos hay en Firestore
+function renderizarHistorialUsuario(docsUsuario) {
+    const tbody = document.getElementById("tabla-historial-usuario");
+    if (!tbody) return;
+
+    if (!docsUsuario || docsUsuario.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="4" class="fila-vacia">No hay compras ni movimientos registrados para este usuario.</td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = docsUsuario
+        .map((item) => {
+            const fechaTexto = item.fechaRegistro
+                ? new Date(item.fechaRegistro).toLocaleDateString("es-MX")
+                : "Registrado en sistema";
+            const detalle = `${item.plan || "Sin plan"}${
+                item.extras && item.extras !== "Ninguno" ? ` • Extras: ${item.extras}` : ""
+            }`;
+            const esCancelado = item.estado === "Cancelado";
+            const claseEstado = esCancelado ? "estado vencida" : "estado vigente";
+
+            return `
+                <tr>
+                    <td><strong>${item.folio || "Sin folio"}</strong><br><small>${fechaTexto}</small></td>
+                    <td>${detalle}</td>
+                    <td>${item.total || "$0 MXN"}</td>
+                    <td><span class="${claseEstado}">${item.estado || "Activo"}</span></td>
+                </tr>
+            `;
+        })
+        .join("");
+}
+
 async function generarCodigoFolio() {
     const snapshot = await getDocs(foliosRef);
     const anio = new Date().getFullYear();
@@ -300,16 +428,26 @@ async function generarCodigoFolio() {
     return `FZ-${anio}-${consecutivo}`;
 }
 
-// Al enviar el formulario: valida, pregunta si está seguro de comprar, guarda y muestra el ticket
 formRegistro?.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Revisa que todos los campos estén correctos antes de preguntar o guardar
     const todoBien = camposRegistro.map((input) => validarCampo(input)).every(Boolean);
     if (!todoBien) {
         const primerError = camposRegistro.find((input) => !validarCampo(input));
         primerError?.focus();
         return;
+    }
+
+    const extrasClaves = Array.from(checkboxesExtras)
+        .filter((chk) => chk.checked && PRECIOS_EXTRAS[chk.value])
+        .map((chk) => chk.value);
+
+    for (const claveExtra of extrasClaves) {
+        const disponible = stockActual[claveExtra] ?? 0;
+        if (disponible <= 0) {
+            window.alert(`No hay stock disponible para: ${PRECIOS_EXTRAS[claveExtra].nombre}`);
+            return;
+        }
     }
 
     const nombre = document.getElementById("nombre").value.trim();
@@ -318,25 +456,50 @@ formRegistro?.addEventListener("submit", async (e) => {
     const clave = document.getElementById("reg-clave").value;
     const { planSeleccionado, total } = calcularTotales();
 
-    const extrasSeleccionados = Array.from(checkboxesExtras)
-        .filter((chk) => chk.checked && PRECIOS_EXTRAS[chk.value])
-        .map((chk) => PRECIOS_EXTRAS[chk.value].nombre);
-
+    const extrasSeleccionados = extrasClaves.map((clave) => PRECIOS_EXTRAS[clave].nombre);
     const textoPlan = `${planSeleccionado.nombre} (${formatoMXN(planSeleccionado.precio)})`;
     const textoExtras = extrasSeleccionados.length ? extrasSeleccionados.join(", ") : "Ninguno";
     const textoTotal = formatoMXN(total);
 
-    // Mensaje de confirmación una vez que los datos ya pasaron la validación
     const seguroCompra = window.confirm(
         `¿Estás seguro de hacer la compra?\n\n` +
         `Cliente: ${nombre}\n` +
         `Plan: ${textoPlan}\n` +
         `Extras: ${textoExtras}\n` +
-        `Total a pagar en efectivo: ${textoTotal}`
+        `Total a pagar en efectivo: ${textoTotal}\n\n` +
+        `Nota: Las devoluciones NO están permitidas.`
     );
 
     if (!seguroCompra) {
         return;
+    }
+
+    if (extrasClaves.length > 0) {
+        try {
+            await runTransaction(db, async (transaction) => {
+                const refsYDatos = [];
+                for (const claveExtra of extrasClaves) {
+                    const ref = doc(db, "inventario", claveExtra);
+                    const snap = await transaction.get(ref);
+                    const actual = snap.exists()
+                        ? Number(snap.data().stock ?? 0)
+                        : PRECIOS_EXTRAS[claveExtra].stockInicial;
+
+                    if (actual <= 0) {
+                        throw new Error(`Sin stock para ${PRECIOS_EXTRAS[claveExtra].nombre}`);
+                    }
+                    refsYDatos.push({ ref, nuevoStock: actual - 1 });
+                }
+
+                for (const item of refsYDatos) {
+                    transaction.update(item.ref, { stock: item.nuevoStock });
+                }
+            });
+        } catch (err) {
+            window.alert(err.message || "No se pudo descontar el stock. Intenta de nuevo.");
+            await cargarYMostrarStock();
+            return;
+        }
     }
 
     const codigoFolio = await generarCodigoFolio();
@@ -349,14 +512,15 @@ formRegistro?.addEventListener("submit", async (e) => {
         clave,
         plan: textoPlan,
         extras: textoExtras,
+        extrasClaves,
         total: textoTotal,
         estado: "Pendiente de pago en efectivo",
+        fechaRegistro: new Date().toISOString(),
     };
 
-    // Guarda en Firestore
     await addDoc(foliosRef, nuevoFolio);
+    await cargarYMostrarStock();
 
-    // Llena el ticket en pantalla y dibuja su código de barras
     document.getElementById("cliente-folio").textContent = nombre;
     document.getElementById("folio-generado").textContent = nuevoFolio.folio;
     document.getElementById("ticket-usuario").textContent = usuario;
@@ -370,7 +534,6 @@ formRegistro?.addEventListener("submit", async (e) => {
     comprobante?.scrollIntoView({ behavior: "smooth" });
 });
 
-// Busca el ticket en Firestore por usuario y contraseña
 formConsultar?.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -391,11 +554,12 @@ formConsultar?.addEventListener("submit", async (e) => {
         marcarCampo(inputClave, false, "Mal: usuario o contraseña incorrectos.");
         resultadoConsulta?.classList.add("oculto");
         folioConsultadoActual = null;
+        renderizarHistorialUsuario([]);
         return;
     }
 
-    const primerDoc = snapshot.docs[0];
-    const encontrado = { id: primerDoc.id, ...primerDoc.data() };
+    const todosLosFolios = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+    const encontrado = todosLosFolios[0];
 
     marcarCampo(inputUsuario, true, "Bien: usuario verificado.");
     marcarCampo(inputClave, true, "Bien: acceso correcto.");
@@ -419,22 +583,43 @@ formConsultar?.addEventListener("submit", async (e) => {
         btnCancelarFolio.disabled = encontrado.estado === "Cancelado";
     }
 
+    renderizarHistorialUsuario(todosLosFolios);
+
     resultadoConsulta?.classList.remove("oculto");
     resultadoConsulta?.scrollIntoView({ behavior: "smooth" });
 });
 
-// Imprime el ticket consultado
 btnImprimirConsulta?.addEventListener("click", () => {
     if (!folioConsultadoActual) return;
     window.print();
 });
 
-// Marca el ticket como "Cancelado" en Firestore
 btnCancelarFolio?.addEventListener("click", async () => {
-    if (!folioConsultadoActual?.id) return;
+    if (!folioConsultadoActual?.id || folioConsultadoActual.estado === "Cancelado") return;
+
+    const confirmarCancelacion = window.confirm(
+        `Aviso: Las devoluciones NO están permitidas en FitZone Gym.\n\n` +
+        `¿Deseas cancelar el folio ${folioConsultadoActual.folio}?`
+    );
+
+    if (!confirmarCancelacion) {
+        return;
+    }
 
     const docRef = doc(db, "folios", folioConsultadoActual.id);
     await updateDoc(docRef, { estado: "Cancelado" });
+
+    if (Array.isArray(folioConsultadoActual.extrasClaves)) {
+        for (const claveExtra of folioConsultadoActual.extrasClaves) {
+            if (!PRECIOS_EXTRAS[claveExtra]) continue;
+            const invRef = doc(db, "inventario", claveExtra);
+            const snap = await getDoc(invRef);
+            const actual = snap.exists() ? Number(snap.data().stock ?? 0) : 0;
+            await updateDoc(invRef, { stock: actual + 1 });
+        }
+        await cargarYMostrarStock();
+    }
+
     folioConsultadoActual.estado = "Cancelado";
 
     const elEstado = document.getElementById("cons-estado");
@@ -445,21 +630,56 @@ btnCancelarFolio?.addEventListener("click", async () => {
     if (btnCancelarFolio) {
         btnCancelarFolio.disabled = true;
     }
+
+    window.alert("Folio cancelado. Recuerda que en FitZone Gym no se realizan devoluciones.");
 });
 
-// Limpia y oculta el resultado de consulta
 btnCerrarConsulta?.addEventListener("click", () => {
     resultadoConsulta?.classList.add("oculto");
     folioConsultadoActual = null;
     formConsultar?.reset();
+    renderizarHistorialUsuario([]);
 
     camposConsulta.forEach((input) => {
         const label = document.querySelector(`label[for="${input.id}"]`);
         const msg = obtenerElementoMensaje(input);
-        label?.classList.remove("label-bien", "label-mal");
+        label?.classList.remove("label-bien", "label-mal", "label-error");
         if (msg) {
             msg.textContent = "";
             msg.classList.remove("ok", "error");
         }
     });
 });
+function parsearMontoMXN(textoTotal) {
+    const limpio = String(textoTotal || "0").replace(/[^\d.-]/g, "");
+    const numero = Number(limpio);
+    return Number.isFinite(numero) ? numero : 0;
+}
+
+function actualizarResumenGanancias(lista) {
+    let pagado = 0;
+    let pendiente = 0;
+    let cancelado = 0;
+
+    for (const f of lista) {
+        const monto = parsearMontoMXN(f.total);
+        const estado = String(f.estado || "").toLowerCase();
+
+        if (estado === "cancelado") {
+            cancelado += monto;
+        } else if (estado.includes("pagado")) {
+            pagado += monto;
+        } else {
+            pendiente += monto;
+        }
+    }
+
+    const fmt = (n) => `$${n.toLocaleString("es-MX")} MXN`;
+    const elPagado = document.getElementById("panel-ganancias-pagado");
+    const elPendiente = document.getElementById("panel-ganancias-pendiente");
+    const elCancelado = document.getElementById("panel-ganancias-cancelado");
+
+    if (elPagado) elPagado.textContent = fmt(pagado);
+    if (elPendiente) elPendiente.textContent = fmt(pendiente);
+    if (elCancelado) elCancelado.textContent = fmt(cancelado);
+}

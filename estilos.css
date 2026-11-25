@@ -2,7 +2,6 @@
    ESTILO WEB CLASICO - FITZONE GYM (NEGRO Y AZUL)
    ========================================================================== */
 
-/* Variables de color principales de todo el sitio */
 :root {
     --negro: #090d16;       /* Color oscuro principal para fondos y encabezados */
     --azul-oscuro: #0f294a; /* Azul profundo para barras y textos destacados */
@@ -14,18 +13,19 @@
     --borde: #7b93b3;       /* Color de borde clasico para marcos y divisiones */
     --texto: #111827;       /* Color principal del texto de lectura */
     --gris: #4b5563;        /* Color gris para descripciones y textos secundarios */
-    --verde: #166534;       /* Color de estado vigente */
-    --rojo: #991b1b;        /* Color de estado vencido o boton rojo */
+    --verde: #15803d;       /* Color valido / vigente */
+    --rojo: #dc2626;        /* Color de error / cancelado */
 }
 
-/* Reinicio basico para que todos los navegadores midan igual */
-* {
+/* Reinicio basico corregido (*) */
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-/* Configuracion general del cuerpo de la pagina */
 body {
     font-family: Arial, sans-serif;
     font-size: 14px;
@@ -39,8 +39,9 @@ body {
    CABECERA: TITULO A LA IZQUIERDA Y MENU VERTICAL A LA DERECHA
    ========================================================================== */
 
-/* Contenedor principal del encabezado en dos columnas (titulo izq / menu der) */
 .encabezado {
+    position: relative;
+    overflow: hidden;
     background: linear-gradient(to bottom, #162032 0%, #090d16 100%);
     color: var(--blanco);
     border-bottom: 3px solid var(--azul);
@@ -56,7 +57,57 @@ body {
     column-gap: 20px;
 }
 
-/* Titulo principal del gimnasio alineado a la izquierda */
+/* Linea animada en el borde inferior de la cabecera */
+.encabezado::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #38bdf8, #3b82f6, transparent);
+    background-size: 200% 100%;
+    animation: moverLineaHeader 3s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes moverLineaHeader {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.encabezado-marca {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logo-fz {
+    min-width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background-color: var(--azul);
+    color: var(--blanco);
+    font-weight: 800;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.5px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.insignias-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
 .encabezado h1 {
     grid-area: titulo;
     font-family: Arial, sans-serif;
@@ -68,7 +119,6 @@ body {
     margin-bottom: 4px;
 }
 
-/* Subtitulo o lema debajo del titulo principal */
 .encabezado p {
     grid-area: subtitulo;
     font-family: Arial, sans-serif;
@@ -78,7 +128,6 @@ body {
     margin-bottom: 8px;
 }
 
-/* Insignia clasica de estado en la cabecera */
 .insignia-estado {
     grid-area: insignia;
     display: inline-block;
@@ -92,7 +141,6 @@ body {
     padding: 4px 10px;
 }
 
-/* Boton hamburguesa (oculto en escritorio, visible en pantallas chicas) */
 .btn-hamburguesa {
     display: none;
     grid-area: menu;
@@ -109,7 +157,6 @@ body {
     cursor: pointer;
 }
 
-/* Cada linea que forma el icono de hamburguesa */
 .btn-hamburguesa span {
     display: block;
     width: 20px;
@@ -118,22 +165,18 @@ body {
     transition: transform 0.2s, opacity 0.2s;
 }
 
-/* Animacion de la primera linea al abrir el menu */
 .btn-hamburguesa.activo span:nth-child(1) {
     transform: translateY(6px) rotate(45deg);
 }
 
-/* Oculta la linea central cuando el boton esta activo */
 .btn-hamburguesa.activo span:nth-child(2) {
     opacity: 0;
 }
 
-/* Animacion de la tercera linea al abrir el menu */
 .btn-hamburguesa.activo span:nth-child(3) {
     transform: translateY(-6px) rotate(-45deg);
 }
 
-/* Menu de navegacion acomodado de bajada a la derecha */
 .menu-pildoras {
     grid-area: menu;
     list-style: none;
@@ -143,7 +186,6 @@ body {
     gap: 5px;
 }
 
-/* Enlaces del menu en formato clasico con borde derecho azul */
 .menu-pildoras a {
     display: inline-block;
     text-decoration: none;
@@ -159,32 +201,29 @@ body {
     border-right: 3px solid #60a5fa;
 }
 
-/* Efecto al pasar el cursor sobre un enlace del menu */
 .menu-pildoras a:hover {
     color: var(--blanco);
     background-color: #163763;
     border-right-color: var(--blanco);
 }
 
-/* Estilo del enlace correspondiente a la pagina actual */
 .menu-pildoras a.activo {
     background-color: var(--azul);
     color: var(--blanco);
     border-color: #93c5fd;
     border-right: 3px solid var(--blanco);
+    box-shadow: 0 3px 10px rgba(37, 99, 235, 0.35);
 }
 
-/* Indicador visual antes del texto en el enlace activo */
 .menu-pildoras a.activo::before {
     content: "▶ ";
     color: var(--azul-claro);
 }
 
 /* ==========================================================================
-   CONTENEDOR PRINCIPAL Y TITULOS DE SECCION
+   CONTENEDOR PRINCIPAL Y CONTORNO NEGRO MOVIL PARA CONTENEDOR CENTRADO
    ========================================================================== */
 
-/* Caja central donde vive el contenido principal de cada vista */
 .contenedor-principal {
     width: 92%;
     max-width: 820px;
@@ -195,7 +234,78 @@ body {
     padding: 24px 26px;
 }
 
-/* Barra de encabezado clasica para cada bloque o formulario */
+/* Aplicala al contenedor grande que envuelve y centra la informacion */
+.marco-linea-negra {
+    position: relative;
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.marco-linea-negra .borde-top,
+.marco-linea-negra .borde-bottom {
+    position: absolute;
+    left: -100%;
+    width: 100%;
+    height: 3px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.marco-linea-negra .borde-top {
+    top: 0;
+    background: linear-gradient(90deg, transparent, #000000, #111827, transparent);
+    animation: lineaBordeArriba 2.6s linear infinite;
+}
+
+.marco-linea-negra .borde-bottom {
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, #000000, #111827, transparent);
+    animation: lineaBordeAbajo 2.6s linear infinite;
+}
+
+.marco-linea-negra .borde-left,
+.marco-linea-negra .borde-right {
+    position: absolute;
+    top: -100%;
+    width: 3px;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.marco-linea-negra .borde-left {
+    left: 0;
+    background: linear-gradient(180deg, transparent, #000000, #111827, transparent);
+    animation: lineaBordeIzq 2.6s linear infinite;
+}
+
+.marco-linea-negra .borde-right {
+    right: 0;
+    background: linear-gradient(180deg, transparent, #000000, #111827, transparent);
+    animation: lineaBordeDer 2.6s linear infinite;
+}
+
+@keyframes lineaBordeArriba {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+@keyframes lineaBordeAbajo {
+    0% { left: 100%; }
+    100% { left: -100%; }
+}
+
+@keyframes lineaBordeIzq {
+    0% { top: 100%; }
+    100% { top: -100%; }
+}
+
+@keyframes lineaBordeDer {
+    0% { top: -100%; }
+    100% { top: 100%; }
+}
+
 .titulo-bloque {
     font-family: Arial, sans-serif;
     font-size: 14px;
@@ -208,7 +318,6 @@ body {
     margin-bottom: 10px;
 }
 
-/* Texto introductorio debajo del titulo de bloque */
 .texto-intro {
     font-family: Arial, sans-serif;
     font-size: 14px;
@@ -220,7 +329,6 @@ body {
    ACOMODO DE IMAGENES: FICHA LATERAL (FOTO IZQ / TEXTO DER)
    ========================================================================== */
 
-/* Tarjeta horizontal clasica con imagen a un lado y descripcion al otro */
 .bloque-foto {
     margin-bottom: 20px;
     border: 1px solid var(--borde);
@@ -232,7 +340,6 @@ body {
     align-items: center;
 }
 
-/* Marco de la imagen con borde clasico */
 .marco-imagen {
     border: 1px solid var(--borde);
     overflow: hidden;
@@ -240,7 +347,6 @@ body {
     margin-bottom: 0;
 }
 
-/* Imagen recortada de forma uniforme dentro de su marco lateral */
 .marco-imagen img {
     width: 100%;
     height: 150px;
@@ -248,7 +354,6 @@ body {
     display: block;
 }
 
-/* Titulo que acompana a la imagen */
 .subtitulo-foto {
     font-family: Arial, sans-serif;
     font-size: 14px;
@@ -257,7 +362,6 @@ body {
     margin-bottom: 6px;
 }
 
-/* Descripcion de la imagen o consejo saludable */
 .descripcion-bloque {
     font-family: Arial, sans-serif;
     font-size: 14px;
@@ -265,11 +369,12 @@ body {
 }
 
 /* ==========================================================================
-   BOTONES CLASICOS
+   BOTONES CLASICOS Y CAMBIO DE COLOR AL PRESIONAR
    ========================================================================== */
 
-/* Boton principal azul con bisel clasico */
-.btn {
+button,
+.btn,
+.btn-primario {
     display: inline-block;
     background: linear-gradient(to bottom, #2563eb 0%, #1d4ed8 50%, #1e40af 100%);
     color: var(--blanco);
@@ -283,25 +388,35 @@ body {
     cursor: pointer;
     text-align: center;
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
 }
 
-/* Cambio de tono al pasar el cursor sobre el boton */
-.btn:hover {
+button:hover,
+.btn:hover,
+.btn-primario:hover {
     background: linear-gradient(to bottom, #1d4ed8 0%, #1e40af 100%);
 }
 
-/* Pequeno desplazamiento hacia abajo al hacer clic */
-.btn:active {
-    transform: translateY(1px);
+button:active,
+.btn:active,
+.btn-primario:active,
+button.presionado,
+.btn.presionado,
+.btn-primario.presionado,
+button.btn-verde,
+.btn.btn-verde {
+    background: var(--verde) !important;
+    border-color: #14532d !important;
+    color: var(--blanco) !important;
+    transform: translateY(1px) scale(0.98);
 }
 
-/* Estado deshabilitado del boton */
+button:disabled,
 .btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
 }
 
-/* Variante oscura del boton */
 .btn-negro {
     background: linear-gradient(to bottom, #334155 0%, #111827 100%);
     border-color: #030712;
@@ -311,7 +426,6 @@ body {
     background: linear-gradient(to bottom, #1e293b 0%, #090d16 100%);
 }
 
-/* Variante roja para acciones como cancelar */
 .btn-rojo {
     background: linear-gradient(to bottom, #dc2626 0%, #991b1b 100%);
     border-color: #7f1d1d;
@@ -321,13 +435,11 @@ body {
     background: linear-gradient(to bottom, #b91c1c 0%, #7f1d1d 100%);
 }
 
-/* Boton de tamano compacto */
 .btn-chico {
     padding: 6px 12px;
     font-size: 14px;
 }
 
-/* Boton que ocupa todo el ancho disponible */
 .btn-bloque {
     width: 100%;
 }
@@ -336,7 +448,6 @@ body {
    PRODUCTOS Y MEMBRESIAS
    ========================================================================== */
 
-/* Banner informativo de promociones o descuentos */
 .aviso-descuento {
     background-color: var(--azul-claro);
     border: 1px solid var(--borde);
@@ -346,7 +457,6 @@ body {
     margin-bottom: 20px;
 }
 
-/* Cuadricula de tarjetas de productos y planes */
 .grid-productos {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -354,9 +464,9 @@ body {
     margin-bottom: 24px;
 }
 
-/* Tarjeta individual de producto o membresia */
 .card-item {
     border: 1px solid var(--borde);
+    border-left: 4px solid var(--azul);
     background-color: var(--gris-claro);
     padding: 14px;
     display: flex;
@@ -364,7 +474,6 @@ body {
     justify-content: space-between;
 }
 
-/* Etiqueta superior de categoria */
 .etiqueta {
     font-size: 14px;
     font-weight: bold;
@@ -374,7 +483,6 @@ body {
     display: block;
 }
 
-/* Nombre del producto o plan */
 .card-item h3 {
     font-size: 14px;
     font-weight: bold;
@@ -382,14 +490,12 @@ body {
     margin-bottom: 6px;
 }
 
-/* Descripcion del producto o plan */
 .card-item p {
     font-size: 14px;
     color: var(--gris);
     margin-bottom: 10px;
 }
 
-/* Precio mostrado en cada tarjeta */
 .precio {
     font-size: 14px;
     font-weight: bold;
@@ -397,11 +503,15 @@ body {
     margin-bottom: 10px;
 }
 
+.agotado {
+    color: var(--rojo);
+    font-weight: bold;
+}
+
 /* ==========================================================================
    SECCION INFERIOR: SEPARADOR CON ETIQUETA Y CONSULTA DE FOLIO
    ========================================================================== */
 
-/* Linea divisoria clasica con recuadro central */
 .separador-seccion {
     display: flex;
     align-items: center;
@@ -416,7 +526,6 @@ body {
     border-top: 1px solid var(--borde);
 }
 
-/* Etiqueta central dentro del separador */
 .separador-seccion span {
     font-family: Arial, sans-serif;
     font-size: 14px;
@@ -427,14 +536,12 @@ body {
     padding: 4px 12px;
 }
 
-/* Caja de consulta o cancelacion de folio */
 .tarjeta-consulta {
     background-color: var(--gris-claro);
     border: 1px solid var(--borde);
     padding: 18px 20px;
 }
 
-/* Titulo de la seccion de consulta */
 .tarjeta-consulta h2 {
     font-size: 14px;
     font-weight: bold;
@@ -443,27 +550,23 @@ body {
     margin-bottom: 6px;
 }
 
-/* Instruccion breve dentro de la tarjeta de consulta */
 .tarjeta-consulta .subtexto-consulta {
     font-size: 14px;
     color: var(--gris);
     margin-bottom: 12px;
 }
 
-/* Linea interna dentro de la tarjeta de consulta */
 .separador-tarjeta {
     border: 0;
     border-top: 1px solid #cbd5e1;
     margin-bottom: 14px;
 }
 
-/* Resalta el codigo de folio dentro de la consulta */
 .folio-destacado {
     color: var(--azul);
     font-weight: bold;
 }
 
-/* Pila vertical de botones en el resultado de consulta */
 .acciones-consulta {
     display: flex;
     flex-direction: column;
@@ -471,37 +574,46 @@ body {
 }
 
 /* ==========================================================================
-   FORMULARIOS, EXTRAS Y RESUMEN DE PAGO
+   FORMULARIOS, LABELS VERDE/ROJO, EXTRAS Y RESUMEN DE PAGO
    ========================================================================== */
 
-/* Ancho maximo centrado para los formularios */
 .form-caja {
     max-width: 540px;
     margin: 0 auto;
 }
 
-/* Fila con dos campos lado a lado en escritorio */
 .fila-dos-campos {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
 }
 
-/* Contenedor de cada etiqueta y campo de entrada */
 .campo {
     margin-bottom: 13px;
 }
 
-/* Etiqueta de cada campo del formulario */
 .campo label {
     display: block;
     font-size: 14px;
     font-weight: bold;
     margin-bottom: 4px;
     color: var(--negro);
+    transition: color 0.15s ease;
 }
 
-/* Cajas de texto, telefono, correo, contrasena y selector de plan */
+/* Label en verde cuando esta bien y en rojo cuando esta mal */
+.campo label.label-bien,
+label.label-bien {
+    color: var(--verde) !important;
+}
+
+.campo label.label-mal,
+label.label-mal,
+label.label-error,
+.campo-error label {
+    color: var(--rojo) !important;
+}
+
 .campo input[type="text"],
 .campo input[type="tel"],
 .campo input[type="email"],
@@ -518,7 +630,6 @@ body {
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
-/* Resalte al enfocar un campo de formulario */
 .campo input:focus,
 .campo select:focus {
     outline: none;
@@ -526,7 +637,23 @@ body {
     background-color: #f8fbff;
 }
 
-/* Contenedor de productos o servicios extras opcionales */
+.mensaje-campo {
+    display: block;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.mensaje-campo.error {
+    color: var(--rojo);
+    font-weight: bold;
+}
+
+.mensaje-campo.ok {
+    color: var(--verde);
+    font-weight: bold;
+}
+
 .lista-extras {
     border: 1px solid var(--borde);
     background-color: var(--gris-claro);
@@ -534,7 +661,6 @@ body {
     margin-bottom: 14px;
 }
 
-/* Cada fila de extra con nombre y precio */
 .extra-opcion {
     display: flex;
     justify-content: space-between;
@@ -545,26 +671,22 @@ body {
     cursor: pointer;
 }
 
-/* Quita la linea punteada del ultimo extra */
 .extra-opcion:last-child {
     border-bottom: none;
 }
 
-/* Resalta visualmente la fila de extra cuando su casilla esta marcada */
 .extra-opcion:has(input:checked) {
     background-color: var(--azul-claro);
     font-weight: bold;
     color: var(--azul-oscuro);
 }
 
-/* Alinea el checkbox y el nombre del extra */
 .extra-opcion span {
     display: flex;
     align-items: center;
     gap: 7px;
 }
 
-/* Linea de casilla de descuento estudiantil */
 .check-linea {
     display: flex;
     align-items: center;
@@ -576,7 +698,6 @@ body {
     cursor: pointer;
 }
 
-/* Resalta la linea de estudiante al activarse */
 .check-linea:has(input:checked) {
     background-color: var(--azul-claro);
     border-color: var(--borde);
@@ -584,7 +705,6 @@ body {
     color: var(--azul-oscuro);
 }
 
-/* Recuadro de subtotal, descuento y total en efectivo */
 .resumen-cuenta {
     background-color: var(--azul-claro);
     border: 1px solid var(--borde);
@@ -593,7 +713,6 @@ body {
     font-size: 14px;
 }
 
-/* Cada renglon del desglose de cuenta */
 .fila-cuenta {
     display: flex;
     justify-content: space-between;
@@ -601,7 +720,6 @@ body {
     color: var(--texto);
 }
 
-/* Renglon final del total a pagar */
 .fila-total {
     display: flex;
     justify-content: space-between;
@@ -617,8 +735,8 @@ body {
    COMPROBANTE / TICKET DE FOLIO
    ========================================================================== */
 
-/* Recuadro tipo recibo con borde punteado */
-.ticket-folio {
+.ticket-folio,
+.comprobante-box {
     text-align: center;
     border: 2px dashed var(--azul-oscuro);
     background-color: #fffef5;
@@ -626,7 +744,6 @@ body {
     margin-top: 14px;
 }
 
-/* Sello clasico superior en el comprobante */
 .sello-folio {
     display: inline-block;
     font-family: Arial, sans-serif;
@@ -639,7 +756,6 @@ body {
     margin-bottom: 10px;
 }
 
-/* Codigo de folio resaltado */
 .codigo-folio {
     font-family: Arial, sans-serif;
     font-size: 14px;
@@ -653,7 +769,6 @@ body {
     letter-spacing: 1px;
 }
 
-/* Lista de datos del ticket o de la consulta */
 .detalle-ticket {
     background-color: var(--blanco);
     border: 1px solid var(--borde);
@@ -663,12 +778,10 @@ body {
     font-size: 14px;
 }
 
-/* Separacion entre cada dato del ticket */
 .detalle-ticket p {
     margin-bottom: 5px;
 }
 
-/* Promocion del scoop de cortesia */
 .cupon-scoop {
     background-color: var(--negro);
     color: var(--blanco);
@@ -679,14 +792,12 @@ body {
     margin: 10px 0;
 }
 
-/* Instruccion final del comprobante */
 .nota-ticket {
     font-size: 14px;
     color: var(--gris);
     margin-bottom: 14px;
 }
 
-/* Contenedor de botones del comprobante */
 .acciones-ticket {
     display: flex;
     justify-content: center;
@@ -698,14 +809,12 @@ body {
    PANEL DE ADMINISTRACION / TABLAS CLASICAS
    ========================================================================== */
 
-/* Barra de busqueda superior */
 .barra-busqueda {
     display: flex;
     gap: 8px;
     margin-bottom: 16px;
 }
 
-/* Campo de texto dentro de la barra de busqueda */
 .barra-busqueda input {
     flex: 1;
     padding: 8px 10px;
@@ -715,7 +824,6 @@ body {
     font-size: 14px;
 }
 
-/* Tarjeta de resultados del cliente buscado */
 .resultado-cliente {
     background-color: var(--gris-claro);
     border: 1px solid var(--borde);
@@ -726,46 +834,39 @@ body {
     gap: 14px;
 }
 
-/* Contenedor desplazable para tablas en pantallas estrechas */
 .tabla-contenedor {
     border: 1px solid var(--borde);
     overflow-x: auto;
     background-color: var(--blanco);
 }
 
-/* Tabla clasica con bordes en todas las celdas */
 table {
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
 }
 
-/* Encabezados y celdas de la tabla */
 th, td {
     padding: 8px 10px;
     text-align: left;
     border: 1px solid #cbd5e1;
 }
 
-/* Encabezado oscuro de columnas */
 th {
     background: linear-gradient(to bottom, #1e293b 0%, #0f172a 100%);
     color: var(--blanco);
 }
 
-/* Alterna color en filas pares para facilitar lectura */
 tr:nth-child(even) td {
     background-color: #f8fafc;
 }
 
-/* Mensaje cuando no hay registros en la tabla */
 .fila-vacia {
     text-align: center;
     color: var(--gris);
     padding: 16px;
 }
 
-/* Insignia de estado del folio o membresia */
 .estado {
     padding: 3px 8px;
     border: 1px solid transparent;
@@ -773,21 +874,41 @@ tr:nth-child(even) td {
     font-weight: bold;
 }
 
-/* Estado activo o vigente */
 .vigente {
     background-color: #dcfce7;
     color: var(--verde);
     border-color: #86efac;
 }
 
-/* Estado vencido o cancelado */
 .vencida {
     background-color: #fee2e2;
     color: var(--rojo);
     border-color: #fca5a5;
 }
 
-/* Clase utilitaria para ocultar bloques desde JavaScript */
+.badge-imc {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.badge-imc.saludable {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.badge-imc.atencion {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.badge-imc.alerta {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
 .oculto {
     display: none;
 }
@@ -796,8 +917,8 @@ tr:nth-child(even) td {
    PIE DE PAGINA CLASICO EN DOS PARTES
    ========================================================================== */
 
-/* Franja inferior oscura dividida entre nombre del portal y aviso de pago */
-footer {
+footer,
+.pie-fitzone {
     background: linear-gradient(to bottom, #0f172a 0%, #090d16 100%);
     color: #cbd5e1;
     display: flex;
@@ -816,7 +937,6 @@ footer {
    ESTILOS DE IMPRESION
    ========================================================================== */
 
-/* Oculta elementos de navegacion y formularios al mandar a imprimir */
 @media print {
     body {
         background: var(--blanco);
@@ -847,9 +967,7 @@ footer {
    ADAPTACION A MOVIL Y PANTALLAS CHICAS
    ========================================================================== */
 
-/* Ajustes para pantallas menores o iguales a 680px */
 @media (max-width: 680px) {
-    /* Reordena el encabezado para mostrar el boton hamburguesa a la derecha */
     .encabezado {
         padding: 14px 16px;
         grid-template-columns: 1fr auto;
@@ -860,14 +978,23 @@ footer {
             "menu menu";
     }
 
-    /* Muestra el boton hamburguesa en pantallas chicas */
+    .encabezado-marca {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .logo-fz {
+        min-width: 40px;
+        height: 40px;
+        font-size: 0.95rem;
+    }
+
     .btn-hamburguesa {
         display: inline-flex;
         grid-area: boton;
         align-self: center;
     }
 
-    /* Oculta el menu por defecto hasta que se haga clic en el boton */
     .menu-pildoras {
         display: none;
         grid-area: menu;
@@ -876,79 +1003,55 @@ footer {
         margin-top: 10px;
     }
 
-    /* Muestra el menu cuando JavaScript agrega la clase .abierto */
     .menu-pildoras.abierto {
         display: flex;
     }
 
-    /* Limita el ancho de cada opcion del menu en movil */
     .menu-pildoras li {
         width: 100%;
         max-width: 240px;
     }
 
-    /* Hace que cada enlace ocupe todo el ancho disponible en el menu movil */
     .menu-pildoras a {
         display: block;
         width: 100%;
     }
 
-    /* Pasa la ficha de imagen de horizontal a vertical en pantallas chicas */
     .bloque-foto {
         grid-template-columns: 1fr;
     }
 
-    /* Ajusta la altura de la imagen en movil */
     .marco-imagen img {
         height: 190px;
     }
 
-    /* Reduce el relleno interno del contenedor principal en movil */
     .contenedor-principal {
         padding: 16px 14px;
     }
 
-    /* Apila los campos dobles en una sola columna */
     .fila-dos-campos {
         grid-template-columns: 1fr;
         gap: 0;
     }
 
-    /* Apila el input y el boton de busqueda en movil */
     .barra-busqueda {
         flex-direction: column;
     }
 
-    /* Centra y apila el pie de pagina en pantallas chicas */
-    footer {
+    footer,
+    .pie-fitzone {
         flex-direction: column;
         text-align: center;
         padding: 12px 16px;
     }
 }
-/* Pinta el label en azul cuando el campo es valido */
-.campo label.label-bien {
-    color: var(--azul);
-}
 
-/* Pinta el label en rojo cuando el campo tiene error */
-.campo label.label-mal {
-    color: var(--rojo);
-}
-
-/* Mensaje de validacion debajo de cada campo en Arial 14px */
-.mensaje-campo {
-    display: block;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    margin-top: 4px;
-}
-
-.mensaje-campo.error {
-    color: var(--rojo);
-    font-weight: bold;
-}
-
-.mensaje-campo.ok {
-    color: var(--azul);
+@media (prefers-reduced-motion: reduce) {
+    .encabezado::after,
+    .marco-linea-negra .borde-top,
+    .marco-linea-negra .borde-bottom,
+    .marco-linea-negra .borde-left,
+    .marco-linea-negra .borde-right {
+        animation: none;
+    }
 }
