@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitZone Gym | Mi Cuenta, Compras e Historial</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+    <header class="encabezado">
+        <div class="encabezado-marca">
+            <div class="logo-fz" aria-hidden="true">FZ</div>
+            <div class="encabezado-info">
+                <h1>BIENVENIDO A FITZONE GYM</h1>
+                <p class="subtitulo">Consulta tus compras, historial en el gimnasio y estado de tus folios</p>
+                <div class="insignias-header">
+                    <span class="insignia-dato">[ EFECTIVO EN SUCURSAL • FOLIOS DIGITALES ]</span>
+                    <span class="insignia-dato">[ LUN–DOM 6:00–22:00 ]</span>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-hamburguesa" id="btn-menu" type="button" aria-label="Abrir menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav aria-label="Navegación principal">
+            <ul class="menu-pildoras" id="menu-principal">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="productos.html">Productos y Membresías</a></li>
+                <li><a href="registro.html">Generar Ticket</a></li>
+                <li><a href="resultados.html">Antes y Después</a></li>
+                <li><a href="usuario.html" class="activo">Mi Cuenta</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="contenedor-principal">
+        <div class="marco-linea-negra" style="padding: 18px;">
+            <span class="borde-top" aria-hidden="true"></span>
+            <span class="borde-right" aria-hidden="true"></span>
+            <span class="borde-bottom" aria-hidden="true"></span>
+            <span class="borde-left" aria-hidden="true"></span>
+
+            <h2 class="titulo-bloque">Acceso de Usuario — Compras e Historial</h2>
+            <p class="texto-intro">
+                Ingresa tu usuario y contraseña creados al generar tu ticket para ver tus compras, historial en FitZone Gym o cancelar un folio pendiente.
+            </p>
+
+            <!-- Aviso claro sobre devoluciones -->
+            <div class="aviso-descuento" role="note">
+                <strong>Aviso importante:</strong> Las <strong>devoluciones no están permitidas</strong> en membresías, pases ni productos. Si necesitas cancelar una compra pendiente, hazlo desde esta sección antes de liquidar en caja.
+            </div>
+
+            <!-- Formulario de acceso de usuario -->
+            <form id="form-consultar" class="form-caja">
+                <div class="fila-dos-campos">
+                    <div class="campo">
+                        <label for="consulta-usuario">Usuario</label>
+                        <input type="text" id="consulta-usuario" placeholder="Ej. marialopezlopz" required>
+                    </div>
+                    <div class="campo">
+                        <label for="consulta-clave">Contraseña</label>
+                        <input type="password" id="consulta-clave" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-bloque">Ver mis compras e historial</button>
+            </form>
+
+            <!-- Resultado de compras, historial y cancelación -->
+            <section id="resultado-consulta" class="tarjeta-consulta oculto" style="margin-top: 20px;">
+                <h2>Resumen de Cuenta: <span id="cons-nombre"></span></h2>
+                <p class="subtexto-consulta">
+                    Folio principal: <span id="cons-folio" class="folio-destacado"></span> • Estado: <span id="cons-estado"></span>
+                </p>
+
+                <hr class="separador-tarjeta">
+
+                <!-- Ticket / Compra activa -->
+                <div class="detalle-ticket">
+                    <p><strong>Plan / Membresía:</strong> <span id="cons-plan"></span></p>
+                    <p><strong>Productos y extras:</strong> <span id="cons-extras"></span></p>
+                    <p><strong>Total:</strong> <span id="cons-total"></span></p>
+                </div>
+
+                <!-- Código de barras del folio -->
+                <div style="text-align: center; margin: 12px 0;">
+                    <svg id="codigo-barras-consulta"></svg>
+                </div>
+
+                <!-- Historial de compras y visitas/movimientos en el gym -->
+                <h3 class="subtitulo-foto" style="margin-top: 14px;">Historial de compras y movimientos en el gym</h3>
+                <div class="tabla-contenedor" style="margin-bottom: 14px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Folio / Fecha</th>
+                                <th>Detalle</th>
+                                <th>Monto</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-historial-usuario">
+                            <tr>
+                                <td colspan="4" class="fila-vacia">Inicia sesión para cargar tu historial.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="nota-ticket">
+                    <strong>Política de devoluciones:</strong> No se realizan devoluciones de dinero una vez procesada o pagada la compra. Solo puedes cancelar un folio antes de su cobro en recepción.
+                </p>
+
+                <div class="acciones-consulta">
+                    <button type="button" id="btn-imprimir-consulta" class="btn">Imprimir comprobante</button>
+                    <button type="button" id="btn-cancelar-folio" class="btn btn-rojo">Cancelar compra / folio</button>
+                    <button type="button" id="btn-cerrar-consulta" class="btn btn-negro">Cerrar consulta</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <span>FitZone Gym — Portal de Usuarios y Folios</span>
+        <span>No hay devoluciones • Pagos en efectivo en sucursal.</span>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>
