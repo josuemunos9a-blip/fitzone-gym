@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitZone Gym | Panel del Dueño</title>
+    <link rel="stylesheet" href="estilos.css">
+    <!-- Carga el archivo JavaScript como módulo (type="module") al final para que el DOM ya exista -->
+    <script type="module" src="app.js"></script>
+</head>
+<body>
+
+    <header class="encabezado">
+        <h1>FitZone Gym — Administración</h1>
+        <p>Panel privado para el control de folios, pagos en efectivo y vencimientos</p>
+    </header>
+
+    <main class="contenedor-principal">
+
+        <!-- Login del dueño con Firebase Authentication -->
+        <div id="vista-login" class="form-caja">
+            <h2 class="titulo-bloque">Acceso Exclusivo del Dueño</h2>
+            <p class="texto-intro">Inicia sesión con tu cuenta de administrador registrada en Firebase.</p>
+
+            <form id="form-login">
+                <div class="campo">
+                    <label for="usuario">Correo del administrador</label>
+                    <input type="email" id="usuario" placeholder="admin@fitzone.com" required>
+                </div>
+                <div class="campo">
+                    <label for="clave">Contraseña</label>
+                    <input type="password" id="clave" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Ingresar al panel</button>
+            </form>
+        </div>
+
+        <!-- Vista interna vacía hasta que entren registros reales desde Firebase -->
+        <div id="vista-panel" class="oculto">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 18px;">
+                <div>
+                    <h2 class="titulo-bloque">Control de Folios y Membresías</h2>
+                    <p class="texto-intro" style="margin-bottom: 0;">Busca un folio para registrar pago en efectivo y fecha de vencimiento.</p>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <a href="index.html" class="btn btn-chico">Ver sitio público</a>
+                    <button id="btn-cerrar-sesion" class="btn btn-negro btn-chico">Cerrar sesión</button>
+                </div>
+            </div>
+
+            <div class="barra-busqueda">
+                <input type="text" id="input-buscar" placeholder="Buscar por folio (ej. FZ-2026-001), nombre o usuario">
+                <button id="btn-buscar" class="btn">Buscar</button>
+            </div>
+
+            <div id="resultado-busqueda" class="resultado-cliente oculto">
+                <div>
+                    <span class="etiqueta">Cliente encontrado</span>
+                    <h3 id="res-titulo" style="margin-bottom: 6px;"></h3>
+                    <p id="res-info" style="color: #475569; font-size: 0.88rem; margin-bottom: 12px;"></p>
+                    <button id="btn-scoop" class="btn btn-negro btn-chico">Entregar scoop gratis</button>
+                </div>
+
+                <div>
+                    <span class="etiqueta">Activar membresía (pago en efectivo)</span>
+                    <div class="campo" style="margin-top: 8px;">
+                        <select id="select-membresia">
+                            <option value="semanal">Pase por 7 días ($150 MXN)</option>
+                            <option value="mensual">Membresía Mensual ($450 MXN)</option>
+                            <option value="anual">Membresía Anual ($4,200 MXN)</option>
+                        </select>
+                    </div>
+                    <button id="btn-guardar-membresia" class="btn btn-chico">Guardar membresía</button>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 12px; color: #0b0f19;">Membresías activas y vencidas</h3>
+            <div class="tabla-contenedor">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Folio</th>
+                            <th>Nombre</th>
+                            <th>Plan y extras</th>
+                            <th>Efectivo</th>
+                            <th>Inicio</th>
+                            <th>Vence</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-vencimientos">
+                        <tr>
+                            <td colspan="7" class="fila-vacia">Cargando registros desde Firebase...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>FitZone Gym — Uso interno exclusivo del propietario.</footer>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

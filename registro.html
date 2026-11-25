@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<!-- HTML5 -->
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <!-- Se adapta a celular y compu -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitZone Gym | Generar Ticket</title>
+    <!-- Estilos del sitio -->
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+    <!-- Encabezado y navegación -->
+    <header class="encabezado">
+        <h1>Bienvenido a FitZone Gym</h1>
+        <p>Salud, entrenamiento y estilo de vida fit en un solo lugar</p>
+        <span class="insignia-estado">[ EFECTIVO EN SUCURSAL • FOLIOS DIGITALES ]</span>
+
+        <!-- Botón de menú en pantallas chicas -->
+        <button class="btn-hamburguesa" id="btn-menu" aria-label="Abrir menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul class="menu-pildoras" id="menu-principal">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="productos.html">Productos y Membresías</a></li>
+            <li><a href="registro.html" class="activo">Generar Ticket</a></li>
+            <li><a href="resultados.html">Antes y Después</a></li>
+        </ul>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="contenedor-principal">
+        <div class="form-caja">
+
+            <!-- Consejo rápido -->
+            <article class="bloque-foto">
+                <div class="marco-imagen">
+                    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=900&q=80" alt="Hábitos saludables y ejercicio">
+                </div>
+                <div>
+                    <h3 class="subtitulo-foto">Hábitos saludables: hidratación, descanso y constancia</h3>
+                    <p class="descripcion-bloque">
+                        Complementa tu rutina tomando suficiente agua y durmiendo al menos 7 horas diarias para notar cambios reales desde el primer mes.
+                    </p>
+                </div>
+            </article>
+
+            <h2 class="titulo-bloque">Generar Ticket</h2>
+            <p class="texto-intro">Selecciona tu plan, productos y crea tu usuario para pagar en efectivo en recepción.</p>
+
+            <!-- Formulario para crear el ticket -->
+            <form id="form-registro">
+                <div class="campo">
+                    <label for="nombre">Nombre completo</label>
+                    <input type="text" id="nombre" placeholder="Ej. María López Lopz" required>
+                </div>
+
+                <div class="campo">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" placeholder="Ej. 4772345465" required>
+                </div>
+
+                <!-- Datos de acceso para consultar luego -->
+                <div class="fila-dos-campos">
+                    <div class="campo">
+                        <label for="reg-usuario">Crea tu usuario</label>
+                        <input type="text" id="reg-usuario" placeholder="Ej. marialopezlopz" required>
+                    </div>
+                    <div class="campo">
+                        <label for="reg-clave">Crea tu contraseña</label>
+                        <input type="password" id="reg-clave" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <!-- Plan o membresía -->
+                <div class="campo">
+                    <label for="plan">Selecciona tu plan</label>
+                    <select id="plan">
+                        <option value="ninguno">Sin membresía (solo productos)</option>
+                        <option value="semanal">Pase por 7 días ($150 MXN)</option>
+                        <option value="mensual" selected>Membresía Mensual ($450 MXN)</option>
+                        <option value="anual">Membresía Anual ($4,200 MXN)</option>
+                    </select>
+                </div>
+
+                <!-- Extras opcionales -->
+                <div class="campo">
+                    <label>Agregar productos o entrenador (opcional)</label>
+                    <div class="lista-extras">
+                        <label class="extra-opcion">
+                            <span><input type="checkbox" name="extra" value="proteina"> Proteína Whey 2 lb</span>
+                            <strong>$850 MXN</strong>
+                        </label>
+                        <label class="extra-opcion">
+                            <span><input type="checkbox" name="extra" value="creatina"> Creatina Monohidratada</span>
+                            <strong>$480 MXN</strong>
+                        </label>
+                        <label class="extra-opcion">
+                            <span><input type="checkbox" name="extra" value="entrenador"> Entrenador Personalizado</span>
+                            <strong>$800 MXN</strong>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Descuento estudiantil -->
+                <label class="check-linea">
+                    <input type="checkbox" id="estudiante">
+                    Soy estudiante (20% de descuento en membresía con credencial)
+                </label>
+
+                <!-- Totales en vivo -->
+                <div class="resumen-cuenta">
+                    <div class="fila-cuenta">
+                        <span>Subtotal:</span>
+                        <span id="resumen-subtotal">$450 MXN</span>
+                    </div>
+                    <div class="fila-cuenta">
+                        <span>Descuento estudiante (20% plan):</span>
+                        <span id="resumen-descuento">-$0 MXN</span>
+                    </div>
+                    <div class="fila-total">
+                        <span>Total a pagar en efectivo:</span>
+                        <span id="resumen-total">$450 MXN</span>
+                    </div>
+                </div>
+
+                <!-- Envía el formulario y arma el ticket -->
+                <button type="submit" id="btn-generar" class="btn btn-bloque">Generar ticket</button>
+            </form>
+
+            <!-- Comprobante visible al generar el ticket -->
+            <div id="comprobante" class="ticket-folio oculto">
+                <span class="sello-folio">PAGO EN CAJA • FOLIO PROVISIONAL</span>
+                <p>Comprobante de folio para <strong id="cliente-folio"></strong></p>
+                <div class="codigo-folio" id="folio-generado">FZ-2026-000</div>
+
+                <!-- Código de barras del ticket -->
+                <svg id="codigo-barras-ticket"></svg>
+
+                <div class="detalle-ticket">
+                    <p><strong>Usuario:</strong> <span id="ticket-usuario"></span></p>
+                    <p><strong>Plan:</strong> <span id="ticket-plan"></span></p>
+                    <p><strong>Productos agregados:</strong> <span id="ticket-extras"></span></p>
+                    <p><strong>Total a pagar en efectivo:</strong> <span id="ticket-total"></span></p>
+                </div>
+
+                <div class="cupon-scoop">Regalo incluido: 1 scoop de proteína gratis al pagar en caja</div>
+                <p class="nota-ticket">
+                    Presenta este folio impreso o en captura en recepción para liquidar en efectivo.
+                </p>
+
+                <div class="acciones-ticket">
+                    <button type="button" onclick="window.print()" class="btn btn-chico">Imprimir folio</button>
+                    <a href="index.html" class="btn btn-negro btn-chico">Volver al inicio</a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <span>FitZone Gym — Portal de Membresías y Folios</span>
+        <span>Todos los pagos se realizan en efectivo en sucursal.</span>
+    </footer>
+
+    <!-- JsBarcode primero, luego el script principal -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>

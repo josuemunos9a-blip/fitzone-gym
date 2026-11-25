@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<!-- HTML5 -->
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <!-- Se adapta a celular y compu -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitZone Gym | Antes y Después</title>
+    <!-- Misma hoja de estilos del sitio -->
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+    <!-- Encabezado y navegación -->
+    <header class="encabezado">
+        <h1>Bienvenido a FitZone Gym</h1>
+        <p>Salud, entrenamiento y estilo de vida fit en un solo lugar</p>
+        <span class="insignia-estado">[ EFECTIVO EN SUCURSAL • FOLIOS DIGITALES ]</span>
+
+        <!-- Botón hamburguesa para celular -->
+        <button class="btn-hamburguesa" id="btn-menu" aria-label="Abrir menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul class="menu-pildoras" id="menu-principal">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="productos.html">Productos y Membresías</a></li>
+            <li><a href="registro.html">Generar Ticket</a></li>
+            <li><a href="resultados.html" class="activo">Antes y Después</a></li>
+        </ul>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="contenedor-principal">
+        <div class="form-caja">
+
+            <!-- Tarjeta con foto y tip rápido -->
+            <article class="bloque-foto">
+                <div class="marco-imagen">
+                    <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?auto=format&fit=crop&w=900&q=80" alt="Entrenamiento y constancia">
+                </div>
+                <div>
+                    <h3 class="subtitulo-foto">Hábitos saludables: hidratación, descanso y constancia</h3>
+                    <p class="descripcion-bloque">
+                        Los cambios reales vienen de entrenar con constancia, cuidar lo que comes y dormir bien. Cada proceso es distinto.
+                    </p>
+                </div>
+            </article>
+
+            <h2 class="titulo-bloque">Antes y Después</h2>
+            <p class="texto-intro">Algunos avances de socios de FitZone Gym combinando entrenamiento, buena alimentación y constancia.</p>
+
+            <!-- Caso 1 -->
+            <article class="bloque-foto">
+                <div class="marco-imagen">
+                    <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=900&q=80" alt="Proceso de fuerza y definición">
+                </div>
+                <div>
+                    <h3 class="subtitulo-foto">Carlos M. — 4 meses de constancia</h3>
+                    <p class="descripcion-bloque">
+                        <strong>Antes:</strong> sedentarismo, poca energía y molestias al subir escaleras.<br>
+                        <strong>Después:</strong> mayor fuerza, mejor condición física y rutina fija de 4 días a la semana.
+                    </p>
+                </div>
+            </article>
+
+            <!-- Caso 2 -->
+            <article class="bloque-foto">
+                <div class="marco-imagen">
+                    <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=900&q=80" alt="Mejora en condición física y hábitos">
+                </div>
+                <div>
+                    <h3 class="subtitulo-foto">Andrea R. — 3 meses enfocada en hábitos</h3>
+                    <p class="descripcion-bloque">
+                        <strong>Antes:</strong> dormía mal y dejaba el ejercicio a las dos semanas.<br>
+                        <strong>Después:</strong> más resistencia, mejor postura y constancia con apoyo en sucursal.
+                    </p>
+                </div>
+            </article>
+
+            <!-- Caso 3 -->
+            <article class="bloque-foto">
+                <div class="marco-imagen">
+                    <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80" alt="Entrenamiento en gimnasio">
+                </div>
+                <div>
+                    <h3 class="subtitulo-foto">Luis G. — 6 meses de entrenamiento</h3>
+                    <p class="descripcion-bloque">
+                        <strong>Antes:</strong> sin técnica en pesas y sin plan de entrenamiento.<br>
+                        <strong>Después:</strong> mejor control en ejercicios básicos, más tono muscular y mejor descanso.
+                    </p>
+                </div>
+            </article>
+
+            <!-- Invitación para empezar -->
+            <div class="acciones-ticket">
+                <a href="registro.html" class="btn btn-bloque">Generar mi ticket</a>
+                <a href="index.html" class="btn btn-negro btn-chico">Volver al inicio</a>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <span>FitZone Gym — Portal de Membresías y Folios</span>
+        <span>Todos los pagos se realizan en efectivo en sucursal.</span>
+    </footer>
+
+    <!-- Script del menú móvil -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>

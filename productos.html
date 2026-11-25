@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<!-- HTML5 -->
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <!-- Ajuste para celular y compu -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitZone Gym | Productos y Membresías</title>
+    <!-- Estilos del sitio -->
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+    <!-- Encabezado y navegación -->
+    <header class="encabezado">
+        <h1>Bienvenido a FitZone Gym</h1>
+        <p>Salud, entrenamiento y estilo de vida fit en un solo lugar</p>
+
+        <!-- Botón hamburguesa para celular -->
+        <button class="btn-hamburguesa" id="btn-menu" aria-label="Abrir menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <ul class="menu-pildoras" id="menu-principal">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="productos.html" class="activo">Productos y Membresías</a></li>
+            <li><a href="registro.html">Obtener Folio</a></li>
+            <li><a href="resultados.html">Antes y Después</a></li>
+        </ul>
+    </header>
+
+    <!-- Catálogo de planes y extras -->
+    <main class="contenedor-principal">
+        <div class="aviso-descuento">
+            <strong>Descuento estudiantil:</strong> Obtén 20% de descuento en cualquier membresía presentando tu credencial vigente en recepción. Pago exclusivo en efectivo.
+        </div>
+
+        <h2 class="titulo-bloque">Membresías Disponibles</h2>
+        <p class="texto-intro">Elige tu plan por días, mes o año y apártalo con tu folio.</p>
+
+        <!-- Planes -->
+        <div class="grid-productos">
+            <div class="card-item">
+                <div>
+                    <span class="etiqueta">7 días</span>
+                    <h3>Pase Semanal</h3>
+                    <p>Acceso general a pesas y cardio por una semana completa.</p>
+                </div>
+                <div>
+                    <div class="precio">$150 MXN</div>
+                    <a href="registro.html?plan=semanal" class="btn btn-chico">Apartar folio</a>
+                </div>
+            </div>
+
+            <div class="card-item">
+                <div>
+                    <span class="etiqueta">30 días</span>
+                    <h3>Membresía Mensual</h3>
+                    <p>Acceso ilimitado durante todo el mes y valoración inicial.</p>
+                </div>
+                <div>
+                    <div class="precio">$450 MXN</div>
+                    <a href="registro.html?plan=mensual" class="btn btn-chico">Apartar folio</a>
+                </div>
+            </div>
+
+            <div class="card-item">
+                <div>
+                    <span class="etiqueta">365 días</span>
+                    <h3>Membresía Anual</h3>
+                    <p>Entrenamiento todo el año sin pago de inscripción.</p>
+                </div>
+                <div>
+                    <div class="precio">$4,200 MXN</div>
+                    <a href="registro.html?plan=anual" class="btn btn-chico">Apartar folio</a>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="titulo-bloque">Proteínas y Entrenador Personalizado</h2>
+        <p class="texto-intro">Disponibles directamente en el mostrador del gimnasio.</p>
+
+        <!-- Suplementos y entrenador -->
+        <div class="grid-productos" style="margin-bottom: 0;">
+            <div class="card-item">
+                <div>
+                    <span class="etiqueta">Suplemento</span>
+                    <h3>Proteína Whey 2 lb</h3>
+                    <p>25g de proteína por porción para recuperación muscular.</p>
+                </div>
+                <div>
+                    <div class="precio">$850 MXN</div>
+                    <a href="registro.html?extra=proteina" class="btn btn-negro btn-chico">Reservar con folio</a>
+                </div>
+            </div>
+
+            <div class="card-item">
+                <div>
+                    <span class="etiqueta">Suplemento</span>
+                    <h3>Creatina Monohidratada</h3>
+                    <p>Bote de 300g sin sabor para fuerza y rendimiento.</p>
+                </div>
+                <div>
+                    <div class="precio">$480 MXN</div>
+                    <a href="registro.html?extra=creatina" class="btn btn-negro btn-chico">Reservar con folio</a>
+                </div>
+            </div>
+
+            <div class="card-item">
+                <div>
+                    <span class="etiqueta">Servicio</span>
+                    <h3>Entrenador Personalizado</h3>
+                    <p>Rutina a medida y supervisión técnica durante 30 días.</p>
+                </div>
+                <div>
+                    <div class="precio">$800 MXN / mes</div>
+                    <a href="registro.html?extra=entrenador" class="btn btn-negro btn-chico">Reservar con folio</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>FitZone Gym — Todos los pagos se realizan en efectivo en sucursal.</footer>
+
+    <!-- Script al final para que el menú móvil ya exista al cargarse -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
